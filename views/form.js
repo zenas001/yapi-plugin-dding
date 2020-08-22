@@ -174,7 +174,7 @@ class DdingRobotView extends Component {
                 {formItems}
                 <Form.Item {...formItemLayoutWithOutLabel}>
                   <Button type="dashed" onClick={this.add}>
-                    <Icon type="plus" /> 添加机器人
+                    <Icon type="plus" /> 添加钉钉机器人
                   </Button>
                 </Form.Item>
                 <Form.Item {...formItemLayoutWithOutLabel}>

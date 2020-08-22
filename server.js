@@ -1,17 +1,18 @@
 const yapi = require('yapi.js');
 const mongoose = require('mongoose');
-const controller = require('./controller');
+const ddingcontroller = require('./ddingcontroller');
+const qywechatcontroller = require('./qywechatcontroller');
 const InterfaceNotificationSender = require('./utils/interfaceNotificationSender');
 const InterfaceModel = require('models/interface');
 const Config = require('./utils/config');
-const { SendLogViaDingDingSender } = require('./utils/logSender');
+const {SendLogViaDingDingSender} = require('./utils/logSender');
 
-module.exports = function(options) {
+module.exports = function (options) {
   Config.instance = options;
 
   const originalSaveLog = this.commons.saveLog;
 
-  this.commons.saveLog = function() {
+  this.commons.saveLog = function () {
     const args = Array.prototype.slice.call(arguments);
     originalSaveLog.apply(this, args);
     try {
@@ -24,40 +25,64 @@ module.exports = function(options) {
       (new SendLogViaDingDingSender(logData)).send().then().catch((err) => {
         yapi.commons.log(err, 'error');
       });
-    } catch(err) {
+    } catch (err) {
       yapi.commons.log(err, 'error');
     }
   }
 
-  yapi.connect.then(function() {
-    let db = mongoose.connection.db.collection('dding_robots');
-    db.createIndex({
+  yapi.connect.then(function () {
+    let db = mongoose.connection.db;
+    db.collection('dding_robots').createIndex({
       project_id: 1
     });
+    db.collection('qywechat_robots').createIndex({
+      project_id: 1
+    })
   });
 
-  this.bindHook('add_router', function(router) {
+  this.bindHook('add_router', function (router) {
     router({
-      controller: controller,
+      controller: ddingcontroller,
       method: 'get',
       path: 'dding_robots/detail',
       action: 'show'
     });
 
     router({
-      controller: controller,
+      controller: ddingcontroller,
       method: 'post',
       path: 'dding_robots/up',
       action: 'update'
     });
 
     router({
-      controller: controller,
+      controller: ddingcontroller,
       method: 'post',
       path: 'dding_robots/test',
       action: 'test'
     });
+  });
+  this.bindHook('add_router', function (router) {
+    router({
+      controller: qywechatcontroller,
+      method: 'get',
+      path: 'qywechat_robots/detail',
+      action: 'show'
+    });
 
+    router({
+      controller: qywechatcontroller,
+      method: 'post',
+      path: 'qywechat_robots/up',
+      action: 'update'
+    });
+
+    router({
+      controller: qywechatcontroller,
+      method: 'post',
+      path: 'qywechat_robots/test',
+      action: 'test'
+    });
 
   });
 }
