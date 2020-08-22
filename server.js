@@ -57,5 +57,7 @@ module.exports = function(options) {
       path: 'dding_robots/test',
       action: 'test'
     });
+
+
   });
 }
