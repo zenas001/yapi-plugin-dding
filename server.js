@@ -61,8 +61,7 @@ module.exports = function (options) {
       path: 'dding_robots/test',
       action: 'test'
     });
-  });
-  this.bindHook('add_router', function (router) {
+
     router({
       controller: qywechatcontroller,
       method: 'get',
@@ -83,6 +82,5 @@ module.exports = function (options) {
       path: 'qywechat_robots/test',
       action: 'test'
     });
-
   });
 }

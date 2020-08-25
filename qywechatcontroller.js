@@ -1,13 +1,13 @@
 const yapi = require('yapi.js');
 const BaseController = require('controllers/base.js');
-const DdingRobotModel = require('./ddingRobotModel');
+const QywechatRobotModel = require('./qywechatRobotModel');
 const commons = require('utils/commons');
-const DdingRobotSender = require('./utils/dding');
+const QywechatRobotSender = require('./utils/qywechat');
 
 class QywechatRobotsController extends BaseController {
   constructor(ctx) {
     super(ctx);
-    this.Model = yapi.getInst(DdingRobotModel);
+    this.Model = yapi.getInst(QywechatRobotModel);
   }
 
   /**
@@ -41,7 +41,7 @@ class QywechatRobotsController extends BaseController {
       if (!url) {
         return (ctx.body = yapi.commons.resReturn(null, 400, '企业微信机器人 Webhook 不能为空'));
       }
-      let sender = new DdingRobotSender(url);
+      let sender = new QywechatRobotSender(url);
       let result = await sender.sendTestMessage();
       if (result && result.data && result.data.errcode === 0) {
         return (ctx.body = yapi.commons.resReturn(null));
